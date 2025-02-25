@@ -17,7 +17,7 @@ const Chat = () => {
 
     try {
       setIsLoading(true);
-      const response = await fetch("http://localhost:8080/api/chat", {
+      const response = await fetch("https://ocr-chatbot-ut.netlify.app/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
