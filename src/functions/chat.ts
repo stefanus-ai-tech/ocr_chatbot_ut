@@ -80,43 +80,45 @@ JAWAB DENGAN BAHASA YANG RAMAH DAN SOPAN
 `,
     };
 
-    const chatCompletion = await groq.chat.completions.create({
+    const completion = await groq.chat.completions.create({
       messages: [systemPrompt, ...messages],
-      model: "llama-3.3-70b-versatile", // Changed model
-      temperature: 0.7,
-      max_completion_tokens: 500,
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.5,
+      max_tokens: 1024,
     });
 
-    return new Response(
-      JSON.stringify({ message: chatCompletion.choices[0].message.content }),
-      {
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 200,
-      }
-    );
+    let response = completion.choices[0].message.content.trim();
+
+    // Clean the response if needed
+    response = response.replace(/```/g, "").trim();
+
+    return new Response(JSON.stringify({ message: response }), {
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
+      status: 200,
+    });
   } catch (error) {
     console.error("Error in chat function:", error);
-    interface ErrorResponse {
-      error: string;
-      status?: number;
-      headers?: any;
-    }
-    let errorResponse: ErrorResponse = { error: error.message };
-    let statusCode = 500;
 
-    if (error instanceof Groq.APIError) {
-      statusCode = error.status || 500;
-      errorResponse = {
-        error: error.message,
-        status: error.status,
-        headers: error.headers,
-        // Add any other relevant properties from the Groq error object
-      };
-    }
+    const errorResponse = {
+      error: error.message,
+      status: error instanceof Groq.APIError ? error.status : 500,
+      details:
+        error instanceof Groq.APIError
+          ? {
+              headers: error.headers,
+            }
+          : undefined,
+    };
 
     return new Response(JSON.stringify(errorResponse), {
-      status: statusCode,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "application/json",
+      },
+      status: errorResponse.status || 500,
     });
   }
 }
