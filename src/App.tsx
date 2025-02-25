@@ -26,22 +26,22 @@ const App = () => (
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
             
-            <Route path="/" element={
+            <Route element={
               <ProtectedRoute>
                 <Layout />
               </ProtectedRoute>
             }>
-              <Route path="admin" element={
+              <Route path="/admin" element={
                 <ProtectedRoute allowedRoles={['admin']}>
                   <AdminDashboard />
                 </ProtectedRoute>
               } />
-              <Route path="student" element={
+              <Route path="/student" element={
                 <ProtectedRoute allowedRoles={['student']}>
                   <StudentDashboard />
                 </ProtectedRoute>
               } />
-              <Route index element={<Navigate to="/login" replace />} />
+              <Route path="/" element={<Navigate to="/admin" replace />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />

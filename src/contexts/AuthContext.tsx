@@ -17,15 +17,26 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem('user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }, [user]);
+
   const login = async (email: string, password: string) => {
-    // TODO: Implement actual authentication logic
-    setUser({
+    const newUser = {
       id: '1',
       role: email.includes('admin') ? 'admin' : 'student',
       name: 'John Doe'
-    });
+    };
+    setUser(newUser);
   };
 
   const logout = () => {
