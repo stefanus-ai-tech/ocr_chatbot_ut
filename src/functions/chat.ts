@@ -96,7 +96,12 @@ JAWAB DENGAN BAHASA YANG RAMAH DAN SOPAN
     );
   } catch (error) {
     console.error("Error in chat function:", error);
-    let errorResponse = { error: error.message };
+    interface ErrorResponse {
+      error: string;
+      status?: number;
+      headers?: any;
+    }
+    let errorResponse: ErrorResponse = { error: error.message };
     let statusCode = 500;
 
     if (error instanceof Groq.APIError) {
