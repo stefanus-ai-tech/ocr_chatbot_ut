@@ -16,7 +16,7 @@ export const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Halo!, ada yang bisa saya bantu?",
+      content: "Halo! ada yang bisa saya bantu?",
     },
   ]);
   const [input, setInput] = useState("");

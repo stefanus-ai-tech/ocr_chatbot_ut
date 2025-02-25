@@ -5,6 +5,7 @@ import { Button } from './ui/button';
 import { useToast } from "@/hooks/use-toast";
 import { Menu, X, LayoutDashboard, FileText, Settings } from "lucide-react";
 import { useState } from 'react';
+import { Chat } from './Chat';
 
 const Layout = () => {
   const { user, logout } = useAuth();
@@ -124,6 +125,7 @@ const Layout = () => {
       <main className="container mx-auto px-4 py-8">
         <Outlet />
       </main>
+      <Chat />
     </div>
   );
 };
