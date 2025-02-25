@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
+import { marked } from "marked";
 import { useToast } from "@/hooks/use-toast";
 import { MessagesSquare, Send, Maximize2, Minimize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -96,7 +97,7 @@ export const Chat = () => {
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex ${
+                className={`flex mb-2 ${
                   message.role === "assistant" ? "justify-start" : "justify-end"
                 }`}
               >
@@ -106,9 +107,8 @@ export const Chat = () => {
                       ? "bg-muted"
                       : "bg-primary text-primary-foreground"
                   }`}
-                >
-                  {message.content}
-                </div>
+                  dangerouslySetInnerHTML={{ __html: marked.parse(message.content) }}
+                ></div>
               </div>
             ))}
           </div>
