@@ -1,15 +1,16 @@
 
 import { useAuth } from '../contexts/AuthContext';
-import { Navigate, Outlet, Link } from 'react-router-dom';
+import { Navigate, Outlet, Link, useLocation } from 'react-router-dom';
 import { Button } from './ui/button';
 import { useToast } from "@/hooks/use-toast";
-import { Menu, X } from "lucide-react";
+import { Menu, X, LayoutDashboard, FileText, Settings } from "lucide-react";
 import { useState } from 'react';
 
 const Layout = () => {
   const { user, logout } = useAuth();
   const { toast } = useToast();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   if (!user) {
     return <Navigate to="/login" />;
@@ -24,14 +25,30 @@ const Layout = () => {
   };
 
   const navItems = [
-    { label: "Dashboard", href: user.role === 'admin' ? '/admin' : '/student' },
-    { label: "Documents", href: "#" },
-    { label: "Settings", href: "#" },
+    { 
+      label: "Dashboard", 
+      href: user.role === 'admin' ? '/admin' : '/student',
+      icon: LayoutDashboard 
+    },
+    { 
+      label: "Documents", 
+      href: "#",
+      icon: FileText 
+    },
+    { 
+      label: "Settings", 
+      href: "#",
+      icon: Settings 
+    },
   ];
+
+  const isActiveRoute = (path: string) => {
+    return location.pathname === path;
+  };
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b relative">
+      <header className="border-b sticky top-0 bg-background z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <h1 className="text-2xl font-bold">Document Management System</h1>
@@ -49,13 +66,27 @@ const Layout = () => {
             </button>
 
             {/* Desktop navigation */}
-            <nav className="hidden lg:flex items-center gap-4">
-              <span className="text-sm text-muted-foreground">
-                Welcome, {user.name}
-              </span>
-              <Button variant="outline" onClick={handleLogout}>
-                Logout
-              </Button>
+            <nav className="hidden lg:flex items-center gap-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  className={`flex items-center gap-2 text-sm hover:text-primary transition-colors ${
+                    isActiveRoute(item.href) ? 'text-primary font-medium' : 'text-muted-foreground'
+                  }`}
+                >
+                  <item.icon className="h-4 w-4" />
+                  {item.label}
+                </Link>
+              ))}
+              <div className="flex items-center gap-4 ml-4 border-l pl-4">
+                <span className="text-sm text-muted-foreground">
+                  Welcome, {user.name}
+                </span>
+                <Button variant="outline" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </div>
             </nav>
           </div>
 
@@ -67,9 +98,12 @@ const Layout = () => {
                   <Link
                     key={item.label}
                     to={item.href}
-                    className="px-2 py-2 text-sm hover:bg-accent rounded-md"
+                    className={`flex items-center gap-2 px-2 py-2 text-sm rounded-md hover:bg-accent ${
+                      isActiveRoute(item.href) ? 'bg-accent text-accent-foreground' : ''
+                    }`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
+                    <item.icon className="h-4 w-4" />
                     {item.label}
                   </Link>
                 ))}
