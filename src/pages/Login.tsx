@@ -5,6 +5,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { Chat } from '@/components/Chat';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -35,7 +36,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background animate-fadeIn">
+    <div className="min-h-screen flex items-center justify-center bg-background animate-fadeIn relative">
       <div className="w-full max-w-md p-8 space-y-6 bg-card rounded-lg shadow-lg animate-slideIn">
         <div className="text-center space-y-2">
           <h1 className="text-3xl font-bold">Welcome Back</h1>
@@ -85,6 +86,8 @@ const Login = () => {
           <p>(Any password will work)</p>
         </div>
       </div>
+
+      <Chat />
     </div>
   );
 };
