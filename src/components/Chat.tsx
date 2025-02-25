@@ -66,15 +66,16 @@ export const Chat = () => {
   return (
     <Card
       className={cn(
-        "fixed bottom-4 right-4 shadow-xl transition-all duration-300 ease-in-out",
+        "fixed bottom-4 right-4 shadow-xl overflow-hidden transition-all transform duration-500 ease-in-out",
         isExpanded
-          ? "w-[400px] max-h-[600px] flex flex-col"
-          : "w-14 h-14 rounded-full cursor-pointer hover:scale-110"
+          ? "w-[400px] h-[500px] scale-100 opacity-100"
+          : "w-14 h-14 rounded-full cursor-pointer hover:scale-105 hover:shadow-lg active:scale-95",
+        "will-change-transform"
       )}
       onClick={() => !isExpanded && setIsExpanded(true)}
     >
       {isExpanded ? (
-        <>
+        <div className="flex flex-col h-full animate-in fade-in-0 zoom-in-95">
           <div className="p-4 border-b bg-primary text-primary-foreground flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MessagesSquare className="h-5 w-5" />
@@ -93,7 +94,7 @@ export const Chat = () => {
             </Button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[400px]">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[300px] animate-in slide-in-from-bottom-2">
             {messages.map((message, index) => (
               <div
                 key={index}
@@ -115,7 +116,10 @@ export const Chat = () => {
             ))}
           </div>
 
-          <form onSubmit={handleSubmit} className="p-4 border-t flex gap-2">
+          <form
+            onSubmit={handleSubmit}
+            className="p-4 border-t flex gap-2 animate-in slide-in-from-bottom-1"
+          >
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -126,10 +130,10 @@ export const Chat = () => {
               <Send className="h-4 w-4" />
             </Button>
           </form>
-        </>
+        </div>
       ) : (
-        <div className="w-full h-full flex items-center justify-center bg-primary text-primary-foreground rounded-full">
-          <MessagesSquare className="h-6 w-6" />
+        <div className="w-full h-full flex items-center justify-center bg-primary text-primary-foreground rounded-full transition-transform duration-200">
+          <MessagesSquare className="h-6 w-6 animate-bounce-slow" />
         </div>
       )}
     </Card>
