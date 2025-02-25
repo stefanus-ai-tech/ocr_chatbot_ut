@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [user]);
 
   const login = async (email: string, password: string) => {
-    const newUser = {
+    const newUser: User = {
       id: '1',
       role: email.includes('admin') ? 'admin' : 'student',
       name: 'John Doe'
