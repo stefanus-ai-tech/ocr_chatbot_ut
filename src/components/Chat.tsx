@@ -15,7 +15,7 @@ export const Chat = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Hello! How can I help you today?",
+      content: "Halo!, ada yang bisa saya bantu?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -45,7 +45,10 @@ export const Chat = () => {
       }
 
       const data = await response.json();
-      const assistantMessage: Message = { role: "assistant", content: data.message };
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: data.message,
+      };
       setMessages((msgs) => [...msgs, assistantMessage]);
     } catch (error) {
       console.error("Error sending message:", error);
@@ -53,7 +56,7 @@ export const Chat = () => {
         ...msgs,
         {
           role: "assistant",
-          content: "Sorry, there was an error processing your message.",
+          content: "Maaf, terjadi kesalahan saat memproses pesan Anda.",
         } as Message,
       ]);
     }
