@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,17 +11,20 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login(email, password);
+      const isAdmin = email.includes('admin');
+      const from = location.state?.from?.pathname || (isAdmin ? '/admin' : '/student');
       toast({
         title: "Login successful",
         description: "Welcome back!",
       });
-      navigate('/dashboard');
+      navigate(from, { replace: true });
     } catch (error) {
       toast({
         title: "Login failed",
@@ -74,6 +77,13 @@ const Login = () => {
             Sign In
           </Button>
         </form>
+
+        <div className="text-sm text-center text-muted-foreground">
+          <p>Demo accounts:</p>
+          <p>Admin: admin@example.com</p>
+          <p>Student: student@example.com</p>
+          <p>(Any password will work)</p>
+        </div>
       </div>
     </div>
   );
