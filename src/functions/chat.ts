@@ -1,17 +1,17 @@
 import Groq from "groq-sdk";
+import { config } from "dotenv";
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
-});
+// Load environment variables
+config();
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+};
 
 export async function POST(req: Request) {
-  const corsHeaders = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Access-Control-Allow-Headers":
-      "authorization, x-client-info, apikey, content-type",
-  };
-
   if (req.method === "OPTIONS") {
     return new Response(null, {
       headers: corsHeaders,
@@ -25,6 +25,10 @@ export async function POST(req: Request) {
     if (!messages || !Array.isArray(messages)) {
       throw new Error("Invalid messages format");
     }
+
+    const groq = new Groq({
+      apiKey: process.env.GROQ_API_KEY,
+    });
 
     const chatCompletion = await groq.chat.completions.create({
       messages: messages,
