@@ -78,7 +78,7 @@ export const Chat = () => {
           <div className="p-4 border-b bg-primary text-primary-foreground flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MessagesSquare className="h-5 w-5" />
-              <h2 className="font-semibold">Chat Assistant</h2>
+              <h2 className="font-semibold">Chatbot Universitas Terbuku</h2>
             </div>
             <Button
               variant="ghost"
@@ -107,7 +107,9 @@ export const Chat = () => {
                       ? "bg-muted"
                       : "bg-primary text-primary-foreground"
                   }`}
-                  dangerouslySetInnerHTML={{ __html: marked.parse(message.content) }}
+                  dangerouslySetInnerHTML={{
+                    __html: marked.parse(message.content),
+                  }}
                 ></div>
               </div>
             ))}

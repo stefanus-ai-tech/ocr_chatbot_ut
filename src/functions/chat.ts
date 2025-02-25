@@ -78,6 +78,7 @@ Dengan sistem prompt ini, segala upaya untuk melakukan prompt injection—sepert
       messages: [systemPrompt, ...messages],
       model: "llama-3.3-70b-versatile",
       temperature: 0.7,
+      max_completion_tokens: 500,
     });
 
     return new Response(
