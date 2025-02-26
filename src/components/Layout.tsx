@@ -33,8 +33,8 @@ const Layout = () => {
     },
     { 
       label: "Documents", 
-      href: "/admin/document",
-      icon: FileText 
+      href: user.role === 'admin' ? '/admin/document' : '/student/document',
+      icon: FileText
     },
   ];
 

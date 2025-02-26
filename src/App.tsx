@@ -12,6 +12,7 @@ import StudentDashboard from "./pages/StudentDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 import AdminDocument from "./pages/AdminDocument";
+import StudentDocument from "./pages/StudentDocument";
 
 const queryClient = new QueryClient();
 
@@ -55,6 +56,14 @@ const App = () => (
                 element={
                   <ProtectedRoute allowedRoles={["student"]}>
                     <StudentDashboard />
+                  </ProtectedRoute>
+                }
+              />
+               <Route
+                path="/student/document"
+                element={
+                  <ProtectedRoute allowedRoles={["student"]}>
+                    <StudentDocument />
                   </ProtectedRoute>
                 }
               />
