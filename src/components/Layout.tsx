@@ -36,11 +36,6 @@ const Layout = () => {
       href: "/admin/document",
       icon: FileText 
     },
-    { 
-      label: "Settings", 
-      href: "/admin/setting",
-      icon: Settings 
-    },
   ];
 
   const isActiveRoute = (path: string) => {

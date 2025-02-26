@@ -1,4 +1,3 @@
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
@@ -13,7 +12,6 @@ import StudentDashboard from "./pages/StudentDashboard";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 import AdminDocument from "./pages/AdminDocument";
-import AdminSetting from "./pages/AdminSetting";
 
 const queryClient = new QueryClient();
 
@@ -27,32 +25,39 @@ const App = () => (
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/unauthorized" element={<Unauthorized />} />
-            
-            <Route element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }>
-              <Route path="/admin" element={
-                <ProtectedRoute allowedRoles={['admin']}>
-                  <AdminDashboard />
+
+            <Route
+              element={
+                <ProtectedRoute>
+                  <Layout />
                 </ProtectedRoute>
-              } />
-              <Route path="/admin/document" element={
-                <ProtectedRoute allowedRoles={['admin']}>
-                  <AdminDocument />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/setting" element={
-                <ProtectedRoute allowedRoles={['admin']}>
-                  <AdminSetting />
-                </ProtectedRoute>
-              } />
-              <Route path="/student" element={
-                <ProtectedRoute allowedRoles={['student']}>
-                  <StudentDashboard />
-                </ProtectedRoute>
-              } />
+              }
+            >
+              <Route
+                path="/admin"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/admin/document"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <AdminDocument />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/student"
+                element={
+                  <ProtectedRoute allowedRoles={["student"]}>
+                    <StudentDashboard />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/" element={<Navigate to="/admin" replace />} />
             </Route>
 
