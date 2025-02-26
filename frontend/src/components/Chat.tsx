@@ -70,7 +70,7 @@ const Chat = () => {
   };
 
   return (
-    <div className="chat-container">
+    <div className="rounded-lg border bg-card text-card-foreground fixed bottom-4 right-4 shadow-xl overflow-hidden transition-all transform duration-500 ease-in-out max-w-full max-h-[80vh] w-[350px] h-[500px] scale-100 opacity-100 md:w-[350px] md:h-[500px] sm:w-[90%] sm:h-full will-change-transform">
       <div className="messages-container">
         {messages.map((msg, index) => (
           <div key={index} className={`message ${msg.sender}`}>
