@@ -71,14 +71,14 @@ export const Chat = () => {
       className={cn(
         "fixed bottom-4 right-4 shadow-xl overflow-hidden transition-all transform duration-500 ease-in-out",
         isExpanded
-          ? "w-[400px] h-[500px] scale-100 opacity-100"
+          ? "max-w-full max-h-[80vh] w-[400px] h-[500px] scale-100 opacity-100 md:w-[400px] md:h-[500px] sm:w-full sm:h-full"
           : "w-14 h-14 rounded-full cursor-pointer hover:scale-105 hover:shadow-lg active:scale-95",
         "will-change-transform"
       )}
       onClick={() => !isExpanded && setIsExpanded(true)}
     >
       {isExpanded ? (
-        <div className="flex flex-col h-full animate-in fade-in-0 zoom-in-95">
+        <div className="flex flex-col h-full">
           <div className="p-4 border-b bg-primary text-primary-foreground flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MessagesSquare className="h-5 w-5" />
@@ -97,19 +97,15 @@ export const Chat = () => {
             </Button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[300px] animate-in slide-in-from-bottom-2">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[calc(80vh-112px)]">
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex mb-2 ${
-                  message.role === "assistant" ? "justify-start" : "justify-end"
-                }`}
+                className={`flex mb-2 ${message.role === "assistant" ? "justify-start" : "justify-end"}`}
               >
                 <div
                   className={`max-w-[80%] p-3 rounded-lg ${
-                    message.role === "assistant"
-                      ? "bg-muted"
-                      : "bg-primary text-primary-foreground"
+                    message.role === "assistant" ? "bg-muted" : "bg-primary text-primary-foreground"
                   }`}
                   dangerouslySetInnerHTML={{
                     __html: marked.parse(message.content),
@@ -119,10 +115,7 @@ export const Chat = () => {
             ))}
           </div>
 
-          <form
-            onSubmit={handleSubmit}
-            className="p-4 border-t flex gap-2 animate-in slide-in-from-bottom-1"
-          >
+          <form onSubmit={handleSubmit} className="p-4 border-t flex gap-2">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
