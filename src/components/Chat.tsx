@@ -69,10 +69,10 @@ export const Chat = () => {
   return (
     <Card
       className={cn(
-        "fixed bottom-4 right-4 shadow-xl overflow-hidden transition-all transform duration-500 ease-in-out",
+        "fixed shadow-xl overflow-hidden transition-all transform duration-500 ease-in-out z-50",
         isExpanded
-          ? "max-w-full max-h-[80vh] w-[400px] h-[500px] scale-100 opacity-100 md:w-[400px] md:h-[500px] sm:w-full sm:h-full"
-          : "w-14 h-14 rounded-full cursor-pointer hover:scale-105 hover:shadow-lg active:scale-95",
+          ? "max-w-full w-full md:w-96 h-[500px] scale-100 opacity-100 bottom-0 right-0 md:bottom-4 md:right-4 rounded-t-lg md:rounded-lg"
+          : "w-14 h-14 rounded-full cursor-pointer hover:scale-105 hover:shadow-lg active:scale-95 bottom-4 right-4",
         "will-change-transform"
       )}
       onClick={() => !isExpanded && setIsExpanded(true)}
@@ -82,7 +82,7 @@ export const Chat = () => {
           <div className="p-4 border-b bg-primary text-primary-foreground flex items-center justify-between">
             <div className="flex items-center gap-2">
               <MessagesSquare className="h-5 w-5" />
-              <h2 className="font-semibold">Chatbot Universitas Terbuku</h2>
+              <h2 className="font-semibold">Chatbot Universitas Terbuka</h2>
             </div>
             <Button
               variant="ghost"
@@ -97,15 +97,19 @@ export const Chat = () => {
             </Button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 max-h-[calc(80vh-112px)]">
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
             {messages.map((message, index) => (
               <div
                 key={index}
-                className={`flex mb-2 ${message.role === "assistant" ? "justify-start" : "justify-end"}`}
+                className={`flex mb-2 ${
+                  message.role === "assistant" ? "justify-start" : "justify-end"
+                }`}
               >
                 <div
                   className={`max-w-[80%] p-3 rounded-lg ${
-                    message.role === "assistant" ? "bg-muted" : "bg-primary text-primary-foreground"
+                    message.role === "assistant"
+                      ? "bg-muted"
+                      : "bg-primary text-primary-foreground"
                   }`}
                   dangerouslySetInnerHTML={{
                     __html: marked.parse(message.content),
@@ -121,6 +125,7 @@ export const Chat = () => {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Type your message..."
               disabled={isLoading}
+              className="flex-1"
             />
             <Button type="submit" disabled={isLoading}>
               <Send className="h-4 w-4" />
