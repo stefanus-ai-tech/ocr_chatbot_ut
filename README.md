@@ -107,7 +107,7 @@ This project is a web application built with Vite, React, Shadcn UI, and TypeScr
 1.  Clone the repository:
 
     ```bash
-    git clone [YOUR_REPOSITORY_URL]
+    git clone https://github.com/stefanus-ai-tech/ocr_chatbot_ut
     cd ocr_chatbot_ut
     ```
 
@@ -119,11 +119,7 @@ This project is a web application built with Vite, React, Shadcn UI, and TypeScr
 
 ### Environment Variables
 
-Create a `.env` file in the root directory and add the following:
-
-```
-GROQ_API_KEY=your_groq_api_key
-```
+Delete `.example` from the file `.env.example`
 
 Also create a `.env` file in the `netlify/functions` directory with the same content. Replace `your_groq_api_key` with your actual Groq API key.
 
