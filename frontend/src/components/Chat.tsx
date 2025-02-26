@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 interface Message {
   text: string;
@@ -69,9 +69,51 @@ const Chat = () => {
     }
   };
 
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollTimeoutRef = useRef<NodeJS.Timeout>();
+
+  useEffect(() => {
+    const scrollToBottom = () => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollTo({
+          top: messagesEndRef.current.scrollHeight,
+          behavior: "smooth",
+        });
+      }
+    };
+
+    // Clear any existing timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current);
+    }
+
+    // Scroll immediately when messages change
+    scrollToBottom();
+
+    // If bot is still typing, keep scrolling every 300ms
+    if (isLoading) {
+      scrollTimeoutRef.current = setInterval(scrollToBottom, 300);
+    } else {
+      // After bot finishes, scroll for 2 more seconds
+      scrollTimeoutRef.current = setTimeout(() => {
+        if (scrollTimeoutRef.current) {
+          clearInterval(scrollTimeoutRef.current);
+        }
+      }, 2000);
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current);
+        clearInterval(scrollTimeoutRef.current);
+      }
+    };
+  }, [messages, isLoading]);
+
   return (
     <div className="rounded-lg border bg-card text-card-foreground fixed bottom-4 right-4 shadow-xl overflow-hidden transition-all transform duration-500 ease-in-out max-w-full max-h-[80vh] w-[350px] h-[500px] scale-100 opacity-100 md:w-[350px] md:h-[500px] sm:w-[90%] sm:h-full will-change-transform">
-      <div className="messages-container">
+      <div className="messages-container" ref={messagesEndRef}>
         {messages.map((msg, index) => (
           <div key={index} className={`message ${msg.sender}`}>
             <p>{msg.text}</p>

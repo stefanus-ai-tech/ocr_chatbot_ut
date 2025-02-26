@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
@@ -6,6 +6,7 @@ import { marked } from "marked";
 import { useToast } from "@/hooks/use-toast";
 import { MessagesSquare, Send, Maximize2, Minimize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ScrollService } from "@/services/scrollService";
 
 interface Message {
   role: "assistant" | "user";
@@ -23,6 +24,21 @@ export const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const { toast } = useToast();
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const scrollService = useRef(ScrollService.getInstance());
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      scrollService.current.scrollToBottom(chatContainerRef.current);
+    }
+  }, [messages]);
+
+  useEffect(() => {
+    if (isLoading && chatContainerRef.current) {
+      // Continuously scroll while loading
+      scrollService.current.scrollToBottom(chatContainerRef.current, 500);
+    }
+  }, [isLoading, messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +47,7 @@ export const Chat = () => {
     const userMessage: Message = { role: "user", content: input };
     setMessages((msgs) => [...msgs, userMessage]);
     setInput("");
+    setIsLoading(true); // Set loading state to true when sending message
 
     try {
       const response = await fetch(
@@ -63,6 +80,8 @@ export const Chat = () => {
           content: "Maaf, terjadi kesalahan saat memproses pesan Anda.",
         } as Message,
       ]);
+    } finally {
+      setIsLoading(false); // Set loading state to false when done
     }
   };
 
@@ -97,7 +116,10 @@ export const Chat = () => {
             </Button>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          <div
+            ref={chatContainerRef}
+            className="flex-1 overflow-y-auto p-4 space-y-4"
+          >
             {messages.map((message, index) => (
               <div
                 key={index}
