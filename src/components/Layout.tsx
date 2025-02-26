@@ -33,12 +33,12 @@ const Layout = () => {
     },
     { 
       label: "Documents", 
-      href: "#",
+      href: "/admin/document",
       icon: FileText 
     },
     { 
       label: "Settings", 
-      href: "#",
+      href: "/admin/setting",
       icon: Settings 
     },
   ];
