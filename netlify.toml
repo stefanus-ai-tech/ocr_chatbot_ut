@@ -1,7 +1,17 @@
 [build]
-  command = "vite build"
-  publish = "dist"
-  functions = "src/functions"
+  functions = "netlify/functions"
+  publish = "dist" 
+
+[dev]
+  command = "npm run dev"  # Or yarn dev, etc.
+  targetPort = 5173
+
+[[headers]]
+  for = "/*"
+    [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Origin, X-Requested-With, Content-Type, Accept, Authorization"
 
 [[redirects]]
   from = "/api/*"

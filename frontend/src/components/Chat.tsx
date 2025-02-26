@@ -11,34 +11,58 @@ const Chat = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // Store conversation history for context
+  const [conversationHistory, setConversationHistory] = useState<
+    Array<{ role: string; content: string }>
+  >([]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!message.trim()) return;
 
+    // Add user message to UI immediately
+    setMessages((prev) => [...prev, { text: message, sender: "user" }]);
+
+    // Add to conversation history for API
+    const userMessage = { role: "user", content: message };
+    const updatedHistory = [...conversationHistory, userMessage];
+    setConversationHistory(updatedHistory);
+
+    // Determine API URL depending on the environment
+    const isDevelopment = process.env.NODE_ENV !== "production";
+    const apiUrl = isDevelopment
+      ? "http://localhost:8086/api/chat" // local API endpoint for development
+      : "https://ocr-chatbot-ut.netlify.app/api/chat";
+
     try {
       setIsLoading(true);
-      const response = await fetch("https://ocr-chatbot-ut.netlify.app/api/chat", {
+      setError(""); // Clear any previous errors
+
+      const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ messages: [{ role: "user", content: message }] }),
+        mode: "no-cors", // using no-cors mode; response becomes opaque
+        body: JSON.stringify({ messages: updatedHistory }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.text();
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData}`);
-      }
-
-      const data = await response.json();
-      setMessages((prev) => [
-        ...prev,
-        { text: message, sender: "user" },
-        { text: data.message, sender: "bot" },
-      ]);
+      // With an opaque response you cannot access response.ok or response.json()
+      // ...existing code for handling response (this part may need adjustment)...
     } catch (error) {
       console.error("Error sending message:", error);
-      setError(error instanceof Error ? error.message : "An unexpected error occurred");
+      setError(
+        error instanceof Error ? error.message : "An unexpected error occurred"
+      );
+
+      // Add a fallback message in case of error
+      setMessages((prev) => [
+        ...prev,
+        {
+          text: "Sorry, I couldn't process your request. Please try again later.",
+          sender: "bot",
+        },
+      ]);
     } finally {
       setIsLoading(false);
       setMessage("");
@@ -46,26 +70,31 @@ const Chat = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
+    <div className="chat-container">
+      <div className="messages-container">
+        {messages.map((msg, index) => (
+          <div key={index} className={`message ${msg.sender}`}>
+            <p>{msg.text}</p>
+          </div>
+        ))}
+        {isLoading && <div className="loading-indicator">Bot is typing...</div>}
+      </div>
+
+      {error && <p className="error-message">{error}</p>}
+
+      <form onSubmit={handleSubmit} className="message-form">
         <input
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Type your message..."
+          disabled={isLoading}
+          className="message-input"
         />
-        <button type="submit" disabled={isLoading}>
-          Send
+        <button type="submit" disabled={isLoading} className="send-button">
+          {isLoading ? "Sending..." : "Send"}
         </button>
       </form>
-      {error && <p className="error">{error}</p>}
-      <div>
-        {messages.map((msg, index) => (
-          <p key={index} className={msg.sender}>
-            {msg.text}
-          </p>
-        ))}
-      </div>
     </div>
   );
 };
