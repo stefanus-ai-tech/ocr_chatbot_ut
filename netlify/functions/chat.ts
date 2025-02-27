@@ -361,7 +361,7 @@ exports.handler = async function (event, context) {
       const guardPrompt = llamaGuardPrompt(lastUserMessage.content);
       const guardCompletion = await groq.chat.completions.create({
         messages: [{ role: "user", content: guardPrompt }],
-        model: "deepseek-r1-distill-llama-70b",
+        model: "llama-guard-3-8b",
         temperature: 0.5,
         max_tokens: 500,
       });
@@ -408,7 +408,7 @@ exports.handler = async function (event, context) {
     // --- Generate completion ---
     const completion = await groq.chat.completions.create({
       messages: structuredMessages,
-      model: "deepseek-r1-distill-llama-70b",
+      model: "llama-3.3-70b-versatile",
       temperature: 0.8,
       max_tokens: 5000,
     });
