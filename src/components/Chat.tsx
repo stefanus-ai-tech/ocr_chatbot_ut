@@ -3,10 +3,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { marked } from "marked";
+import { Renderer } from "marked";
 import { useToast } from "@/hooks/use-toast";
 import { MessagesSquare, Send, Maximize2, Minimize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollService } from "@/services/scrollService";
+
+// Create a custom renderer for marked
+const renderer: Partial<Renderer> = {
+  link({ href, title, text }: { href: string; title?: string; text: string }) {
+    const safeTitle = title || "";
+    return `<a href="${href}" title="${safeTitle}" style="color: blue; text-decoration: underline;" target="_blank" rel="noopener noreferrer">${text}</a>`;
+  },
+};
+
+marked.use({ renderer });
 
 interface Message {
   role: "assistant" | "user";
