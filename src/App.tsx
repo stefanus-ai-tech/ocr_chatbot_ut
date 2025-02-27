@@ -67,7 +67,7 @@ const App = () => (
                   </ProtectedRoute>
                 }
               />
-              <Route path="/" element={<Navigate to="/admin" replace />} />
+              <Route path="/" element={<Navigate to="/login" replace />} />
             </Route>
 
             <Route path="*" element={<NotFound />} />
